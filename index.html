@@ -199,8 +199,7 @@
         <!-- СЛАЙД 2: Котик и две кнопки (открыть/не-а) -->
         <div id="slide2" class="slide hidden">
             <h2>хочешь открыть? 💕</h2>
-            <!-- Тут будет твоя гифка. Положи cat.gif в ту же папку -->
-            <img src="emoji-yellow-emoji.gif" alt="ufff" class="cat-gif" onerror="this.src='https://media.tenor.com/VR1GQqIu7PAAAAAi/cat-kiss.gif'; this.onerror=''">
+            <img src="emoji-yello-emoji.gif" alt="ufff" class="cat-gif" onerror="this.src='https://tenor.com/view/hello-kiyty-cute-kawaii-pink-gif-6609393190580363166'; this.onerror=''">
             
             <div class="btn-group">
                 <button id="openLetterBtn" class="btn btn-pink">открыть</button>
@@ -209,23 +208,22 @@
                 </span>
             </div>
         </div>
-
+        
         <!-- СЛАЙД 3: С Днём святого Валентина -->
-        <div id="slide3" class="slide hidden">
+         <div id="slide3" class="slide hidden">
             <h1>💖 С ДНЁМ СВЯТОГО ВАЛЕНТИНА! 💖</h1>
-            <div class="valentine-img">🌸💞🌷</div>
+            <img src="emoji-yellow-emoji.gif" alt="С валентином!" class="valentine-custom-img">
             <button id="toSlide4" class="btn btn-pink">далее →</button>
         </div>
 
         <!-- СЛАЙД 4: Письмо (бабл с сообщением) -->
         <div id="slide4" class="slide hidden">
             <div class="message-bubble" id="letterText">
-                💌 Мой любимый...<br><br>
+                💌 Мой Любимый Тёмулентий...<br><br>
                 Приветики-пистолетики 🎀🔫
-Любимый мой, ты самое чудесное и дорогое, что произошло в моей жизни✨
-Целую тебя в носик и подносье, укрывайся по носик, заворачивайся в пледик и пойдём смотреть хауза ♡♡♡
-С днём Святого Валентина! Я тебя сюпир пупир отень сильна люблююю 💗💗💗 <br>
-                Я напишу его позже ❤️
+                Любимый мой, ты самое чудесное и дорогое, что произошло в моей жизни✨
+                Целую тебя в носик и подносье, укрывайся по носик, заворачивайся в пледик и пойдём смотреть хауза ♡♡♡
+                С днём Святого Валентина! Я тебя сюпир пупир отень сильна люблююю 💗💗💗 <br>
             </div>
             <p style="margin-top: 30px; font-size: 1.2rem;">твоя девочка</p>
         </div>
@@ -264,43 +262,89 @@
             switchSlide(slide3, slide4);
         });
 
-        // ========== УБЕГАЮЩАЯ КНОПКА "НЕ-А" ==========
-        const escapeBtn = document.getElementById('escapeBtn');
-        const escapeContainer = document.getElementById('escapeBtnContainer');
-        
-        // Массив возможных позиций (относительно контейнера)
-        function moveEscapeButton() {
-            const container = escapeContainer;
-            const btn = escapeBtn;
-            
-            // Случайные координаты в пределах контейнера
-            const maxX = 150; // Максимальное смещение вправо
-            const maxY = 80;  // Максимальное смещение вниз/вверх
-            
-            let randomX = Math.floor(Math.random() * maxX) - 50; // отрицательные тоже (влево)
-            let randomY = Math.floor(Math.random() * maxY) - 40;
-            
-            btn.style.position = 'relative';
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
-            
-            // Меняем текст при убегании для смеха
-            const phrases = ['не-а', 'не хочу', 'нееет', 'попробуй ещё', 'мимо', 'сюда не нажмёшь'];
-            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-            btn.textContent = randomPhrase;
-        }
+// ========== УБЕГАЮЩАЯ КНОПКА "НЕ-А" (ТОЛЬКО ПО КЛИКУ) ==========
+const escapeBtn = document.getElementById('escapeBtn');
+const escapeContainer = document.getElementById('escapeBtnContainer');
 
-        // При наведении кнопка убегает
-        escapeBtn.addEventListener('mouseover', moveEscapeButton);
-        
-        // Если всё-таки нажали на "не-а"
-        escapeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            moveEscapeButton();
-            // Дополнительно: быстро убегает при клике
-        });
+// Убираем побег при наведении (если был)
+escapeBtn.removeEventListener('mouseover', moveEscapeButton);
 
-        // ========== ДЛЯ ТЕКСТА ПИСЬМА (ТЫ ВСТАВИШЬ ПОТОМ) ==========
+// Массив смешных фраз при побеге
+const naughtyPhrases = [
+    'не-а', 
+    'а вот фигушки!', 
+    'не догонишь 💨', 
+    'мимо!', 
+    'не сегодня 😘',
+    'попробуй ещё',
+    'ха-ха, убежала!',
+    'и не надейся',
+    'лови меня 💕'
+];
+
+// Массив позиций — кнопка может улететь ДАЛЕКО
+function moveEscapeButton() {
+    const btn = escapeBtn;
+    
+    // Делаем контейнер относительным, если ещё нет
+    escapeContainer.style.position = 'relative';
+    btn.style.position = 'absolute';
+    
+    // Генерируем СЛУЧАЙНЫЕ координаты в пределах всего контейнера слайда
+    // Кнопка может улететь в любую сторону!
+    const containerWidth = escapeContainer.offsetWidth;
+    const containerHeight = escapeContainer.offsetHeight;
+    const btnWidth = btn.offsetWidth;
+    const btnHeight = btn.offsetHeight;
+    
+    // Большой радиус разброса — от -150 до 150 пикселей по горизонтали
+    // и от -100 до 100 по вертикали
+    let randomX = Math.floor(Math.random() * 300) - 150;
+    let randomY = Math.floor(Math.random() * 200) - 100;
+    
+    // Не даём кнопке улететь слишком далеко за пределы видимой области
+    // (но оставляем возможность убегать прилично)
+    if (randomX > 150) randomX = 150;
+    if (randomX < -150) randomX = -150;
+    if (randomY > 100) randomY = 100;
+    if (randomY < -100) randomY = -100;
+    
+    // Применяем смещение
+    btn.style.left = randomX + 'px';
+    btn.style.top = randomY + 'px';
+    
+    // Меняем текст на случайную шаловливую фразу
+    const randomPhrase = naughtyPhrases[Math.floor(Math.random() * naughtyPhrases.length)];
+    btn.textContent = randomPhrase;
+    
+    // Добавляем небольшую анимацию "взбрыка"
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        btn.style.transform = 'scale(1)';
+    }, 150);
+}
+
+// Убегаем ТОЛЬКО при клике
+escapeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation(); // Не даём событию уйти дальше
+    moveEscapeButton();
+});
+
+// Для мобильных устройств тоже работает
+escapeBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    moveEscapeButton();
+});
+
+// ВАЖНО: убираем побег при наведении (если был добавлен ранее)
+escapeBtn.onmouseover = null;
+
+
+
+
+
+        // ========== ДЛЯ ТЕКСТА ПИСЬМА ==========
         // Функция, чтобы обновить текст письма (вызови в консоли или добавь вызов)
         function setLetterText(text) {
             document.getElementById('letterText').innerHTML = text.replace(/\n/g, '<br>');
@@ -311,5 +355,91 @@
         
         // Сейчас тут заглушка. Текст изменишь одной строкой.
     </script>
+    <style>
+/* Контейнер для сердечек */
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    font-size: 24px;
+    color: #ff4d6d;
+    animation: float 6s ease-in infinite;
+    opacity: 0;
+    text-shadow: 0 0 5px rgba(255, 77, 109, 0.5);
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-20vh) scale(1.2);
+        opacity: 0;
+    }
+}
+
+.valentine-custom-img {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    border-radius: 30px;
+    box-shadow: 0 15px 30px rgba(255, 77, 109, 0.3);
+    margin: 20px 0;
+    border: 5px solid white;
+    transition: transform 0.3s ease;
+}
+
+.valentine-custom-img:hover {
+    transform: scale(1.05);
+}
+
+</style>
+
+<div class="hearts-container" id="heartsContainer"></div>
+
+<script>
+// ПАРЯЩИЕ СЕРДЕЧКИ
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    
+    // Случайный выбор символа сердечка
+    const hearts = ['❤️', '🧡', '💛', '💚', '💙', '💜', '💖', '💗', '💘', '💝', '🤍'];
+    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+    
+    // Случайный размер
+    const size = Math.floor(Math.random() * 20) + 20;
+    heart.style.fontSize = size + 'px';
+    
+    // Случайная позиция слева
+    heart.style.left = Math.random() * 100 + '%';
+    
+    // Случайная задержка анимации
+    heart.style.animationDelay = Math.random() * 5 + 's';
+    
+    // Случайная продолжительность анимации (6-12 секунд)
+    heart.style.animationDuration = Math.floor(Math.random() * 6) + 6 + 's';
+    
+    document.getElementById('heartsContainer').appendChild(heart);
+    
+    // Удаляем сердечко после завершения анимации
+    setTimeout(() => {
+        heart.remove();
+    }, 12000);
+}
+
+// Создаём сердечки каждые 300 мс
+setInterval(createHeart, 300);
+</script>
 </body>
 </html>
