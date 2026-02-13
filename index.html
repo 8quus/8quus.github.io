@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя 💌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #ffe4ec 0%, #ffd9e2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.6s ease;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 700px;
+            min-height: 600px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 40px rgba(255, 120, 160, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: relative;
+        }
+
+        /* Эффект растворения */
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
+        /* Конвертик CSS */
+        .envelope {
+            width: 200px;
+            height: 150px;
+            background: #ff9eb5;
+            position: relative;
+            margin: 30px auto;
+            border-radius: 10px 10px 20px 20px;
+            box-shadow: 0 10px 0 #ff7a9e;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 60px solid #ffb6c1;
+        }
+
+        .envelope:after {
+            content: '✉️';
+            position: absolute;
+            top: 30px;
+            left: 80px;
+            font-size: 50px;
+            opacity: 0.2;
+        }
+
+        /* Кнопки */
+        .btn {
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+            letter-spacing: 2px;
+        }
+
+        .btn-pink {
+            background: #ff4d6d;
+            color: white;
+            border-bottom: 4px solid #c9184a;
+        }
+
+        .btn-pink:hover {
+            background: #ff1e4d;
+            transform: translateY(-3px);
+        }
+
+        .btn-gray {
+            background: #d9d9d9;
+            color: #5a5a5a;
+            border-bottom: 4px solid #a6a6a6;
+            position: relative;
+        }
+
+        /* Контейнер для убегающей кнопки */
+        .escape-btn-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        h1 {
+            color: #a4133c;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0 #ffccd5;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #590d22;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.4rem;
+            color: #800f2f;
+            margin: 20px 0;
+        }
+
+        .message-bubble {
+            background: white;
+            padding: 30px;
+            border-radius: 30px 30px 30px 0;
+            box-shadow: 0 10px 0 #ffb3c6;
+            border: 2px solid #ff8fa3;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #590d22;
+            margin-top: 20px;
+            max-width: 500px;
+            white-space: pre-line;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .cat-gif {
+            max-width: 250px;
+            border-radius: 20px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .valentine-img {
+            font-size: 5rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- СЛАЙД 1: Конверт -->
+        <div id="slide1" class="slide">
+            <h2>💌 у меня для тебя письмо...</h2>
+            <div class="envelope"></div>
+            <button id="toSlide2" class="btn btn-pink">далее</button>
+        </div>
+
+        <!-- СЛАЙД 2: Котик и две кнопки (открыть/не-а) -->
+        <div id="slide2" class="slide hidden">
+            <h2>хочешь открыть? 💕</h2>
+            <!-- Тут будет твоя гифка. Положи cat.gif в ту же папку -->
+            <img src="emoji-yellow-emoji.gif" alt="ufff" class="cat-gif" onerror="this.src='https://media.tenor.com/VR1GQqIu7PAAAAAi/cat-kiss.gif'; this.onerror=''">
+            
+            <div class="btn-group">
+                <button id="openLetterBtn" class="btn btn-pink">открыть</button>
+                <span id="escapeBtnContainer" class="escape-btn-container">
+                    <button id="escapeBtn" class="btn btn-gray">не-а</button>
+                </span>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 3: С Днём святого Валентина -->
+        <div id="slide3" class="slide hidden">
+            <h1>💖 С ДНЁМ СВЯТОГО ВАЛЕНТИНА! 💖</h1>
+            <div class="valentine-img">🌸💞🌷</div>
+            <button id="toSlide4" class="btn btn-pink">далее →</button>
+        </div>
+
+        <!-- СЛАЙД 4: Письмо (бабл с сообщением) -->
+        <div id="slide4" class="slide hidden">
+            <div class="message-bubble" id="letterText">
+                💌 Мой любимый...<br><br>
+                Приветики-пистолетики 🎀🔫
+Любимый мой, ты самое чудесное и дорогое, что произошло в моей жизни✨
+Целую тебя в носик и подносье, укрывайся по носик, заворачивайся в пледик и пойдём смотреть хауза ♡♡♡
+С днём Святого Валентина! Я тебя сюпир пупир отень сильна люблююю 💗💗💗 <br>
+                Я напишу его позже ❤️
+            </div>
+            <p style="margin-top: 30px; font-size: 1.2rem;">твоя девочка</p>
+        </div>
+    </div>
+
+    <script>
+        // ========== ПЕРЕКЛЮЧЕНИЕ СЛАЙДОВ С ЭФФЕКТОМ ==========
+        const slide1 = document.getElementById('slide1');
+        const slide2 = document.getElementById('slide2');
+        const slide3 = document.getElementById('slide3');
+        const slide4 = document.getElementById('slide4');
+
+        // Функция для смены слайда с эффектом растворения
+        function switchSlide(fromSlide, toSlide) {
+            fromSlide.classList.add('fade-out');
+            
+            setTimeout(() => {
+                fromSlide.classList.add('hidden');
+                fromSlide.classList.remove('fade-out');
+                toSlide.classList.remove('hidden');
+            }, 400); // Время эффекта
+        }
+
+        // Кнопка "далее" на 1 слайде -> 2 слайд
+        document.getElementById('toSlide2').addEventListener('click', function() {
+            switchSlide(slide1, slide2);
+        });
+
+        // Кнопка "открыть" на 2 слайде -> 3 слайд
+        document.getElementById('openLetterBtn').addEventListener('click', function() {
+            switchSlide(slide2, slide3);
+        });
+
+        // Кнопка "далее" на 3 слайде -> 4 слайд (письмо)
+        document.getElementById('toSlide4').addEventListener('click', function() {
+            switchSlide(slide3, slide4);
+        });
+
+        // ========== УБЕГАЮЩАЯ КНОПКА "НЕ-А" ==========
+        const escapeBtn = document.getElementById('escapeBtn');
+        const escapeContainer = document.getElementById('escapeBtnContainer');
+        
+        // Массив возможных позиций (относительно контейнера)
+        function moveEscapeButton() {
+            const container = escapeContainer;
+            const btn = escapeBtn;
+            
+            // Случайные координаты в пределах контейнера
+            const maxX = 150; // Максимальное смещение вправо
+            const maxY = 80;  // Максимальное смещение вниз/вверх
+            
+            let randomX = Math.floor(Math.random() * maxX) - 50; // отрицательные тоже (влево)
+            let randomY = Math.floor(Math.random() * maxY) - 40;
+            
+            btn.style.position = 'relative';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            
+            // Меняем текст при убегании для смеха
+            const phrases = ['не-а', 'не хочу', 'нееет', 'попробуй ещё', 'мимо', 'сюда не нажмёшь'];
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            btn.textContent = randomPhrase;
+        }
+
+        // При наведении кнопка убегает
+        escapeBtn.addEventListener('mouseover', moveEscapeButton);
+        
+        // Если всё-таки нажали на "не-а"
+        escapeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            moveEscapeButton();
+            // Дополнительно: быстро убегает при клике
+        });
+
+        // ========== ДЛЯ ТЕКСТА ПИСЬМА (ТЫ ВСТАВИШЬ ПОТОМ) ==========
+        // Функция, чтобы обновить текст письма (вызови в консоли или добавь вызов)
+        function setLetterText(text) {
+            document.getElementById('letterText').innerHTML = text.replace(/\n/g, '<br>');
+        }
+
+        // Пример, как ты сможешь вставить письмо:
+        // setLetterText('Привет, зайка...\nЯ тебя очень люблю!');
+        
+        // Сейчас тут заглушка. Текст изменишь одной строкой.
+    </script>
+</body>
+</html>
