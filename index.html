@@ -58,12 +58,12 @@
         }
         .envelope {
             width: 200px;      /* ширина конверта */
-            height: 150px;     /* высота ОСНОВНОЙ ЧАСТИ (прямоугольник) */
+            height: 140px;     /* высота ОСНОВНОЙ ЧАСТИ (прямоугольник) */
             background: #ff9eb5;  /* цвет самого конверта */
             position: relative;
             margin: 30px auto;
             /* скругление только нижних углов, чтобы верх был ровный */
-            border-radius: 10px 10px 20px 20px;  
+            border-radius: 0px 0px 20px 20px;  
             box-shadow: 0 10px 0 #ff7a9e;  /* объём */
         }
         .envelope:before {  
@@ -82,9 +82,9 @@
         .envelope:after {
             content: '✉️';
             position: absolute;
-            top: 150px;
-            left: 200px;
-            font-size: 50px;
+            top: 30px;
+            left: 80px;
+            font-size: 150px;
             opacity: 0.2;
         }
 
@@ -435,5 +435,6 @@ setInterval(createHeart, 300);
 </script>
 </body>
 </html>
+
 
 
