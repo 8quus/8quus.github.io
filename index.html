@@ -53,39 +53,37 @@
         }
 
         /* Конвертик CSS */
-        .envelope {
-            width: 200px;
-            height: 150px;
-            background: #ff9eb5;
-            position: relative;
-            margin: 30px auto;
-            border-radius: 10px 10px 20px 20px;
-            box-shadow: 0 10px 0 #ff7a9e;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
         .envelope:hover {
             transform: scale(1.05);
         }
-
-        .envelope:before {
+        .envelope {
+            width: 200px;      /* ширина конверта */
+            height: 150px;     /* высота ОСНОВНОЙ ЧАСТИ (прямоугольник) */
+            background: #ff9eb5;  /* цвет самого конверта */
+            position: relative;
+            margin: 30px auto;
+            /* скругление только нижних углов, чтобы верх был ровный */
+            border-radius: 10px 10px 20px 20px;  
+            box-shadow: 0 10px 0 #ff7a9e;  /* объём */
+        }
+        .envelope:before {  
+            /* это ВЕРХНИЙ ТРЕУГОЛЬНИК (клапан) */
             content: '';
             position: absolute;
-            top: -40px;
+            top: -40px;        /* поднимаем треугольник НАД прямоугольником */
             left: 0;
             width: 0;
             height: 0;
-            border-left: 100px solid transparent;
-            border-right: 100px solid transparent;
-            border-bottom: 60px solid #ffb6c1;
+            /* рисуем треугольник через границы */
+            border-left: 100px solid transparent;   /* левая сторона треугольника */
+            border-right: 100px solid transparent;  /* правая сторона треугольника */
+            border-bottom: 60px solid #ffb6c1;      /* сам треугольник (клапан) */
         }
-
         .envelope:after {
             content: '✉️';
             position: absolute;
-            top: 30px;
-            left: 80px;
+            top: 150px;
+            left: 200px;
             font-size: 50px;
             opacity: 0.2;
         }
@@ -195,16 +193,19 @@
             <div class="envelope"></div>
             <button id="toSlide2" class="btn btn-pink">Путь</button>
         </div>
-
-        <!-- СЛАЙД 2: Котик и две кнопки (открыть/не-а) -->
+        
+        <!-- СЛАЙД 2: Котик и две кнопки (серая поверх розовой) -->
         <div id="slide2" class="slide hidden">
             <h2>🎈 Хочешь открыть? 💕</h2>
             <img src="hello-kiyty-cute.gif" alt="ufff" class="cat-gif" onerror="this.src='https://media.tenor.com/VR1GQqIu7PAAAAAi/cat-kiss.gif'; this.onerror=''">
-            
-            <div class="btn-group">
-                <button id="openLetterBtn" class="btn btn-pink">открыть</button>
-                <span id="escapeBtnContainer" class="escape-btn-container">
-                    <button id="escapeBtn" class="btn btn-gray">не-а</button>
+            <!-- КОНТЕЙНЕР ДЛЯ КНОПОК (розовая + серая) -->
+            <div style="position: relative; width: 200px; height: 60px; margin: 20px auto;">
+                <!-- Розовая кнопка (под серой) -->
+                <button id="openLetterBtn" class="btn btn-pink" style="position: absolute; top: 0; left: 0; width: 100%;">открыть</button>
+                
+                <!-- Серая кнопка (ПОВЕРХ розовой) -->
+                <span id="escapeBtnContainer" class="escape-btn-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    <button id="escapeBtn" class="btn btn-gray" style="width: 100%; margin: 0;">не-а</button>
                 </span>
             </div>
         </div>
@@ -261,98 +262,90 @@
             switchSlide(slide3, slide4);
         });
 
-// ========== УБЕГАЮЩАЯ КНОПКА "НЕ-А" (ТОЛЬКО ПО КЛИКУ) ==========
+
+
+// ========== УБЕГАЮЩАЯ КНОПКА (БОЛЕЕ РАНДОМНАЯ) ==========
 const escapeBtn = document.getElementById('escapeBtn');
 const escapeContainer = document.getElementById('escapeBtnContainer');
+let firstClick = true;  // флаг первого нажатия
 
-// Убираем побег при наведении (если был)
-escapeBtn.removeEventListener('mouseover', moveEscapeButton);
-
-// Массив смешных фраз при побеге
 const naughtyPhrases = [
-    'не-а', 
-    'а вот фигушки!', 
-    'не догонишь💨', 
-    'мимо!', 
-    'не сегодня😘',
-    'попробуй ещё',
-    'ха-ха, убежала!',
-    'и не надейся💅',
-    'лови меня 💕'
+    'не-а', 'а вот фигушки!', 'не догонишь💨', 'мимо!', 
+    'не сегодня😘', 'попробуй ещё', 'ха-ха, убежала!',
+    'и не надейся💅', 'лови меня 💕'
 ];
 
-// Массив позиций — кнопка может улететь ДАЛЕКО
 function moveEscapeButton() {
     const btn = escapeBtn;
+    const container = escapeContainer;
+    const slide = document.getElementById('slide2');
     
-    // Делаем контейнер относительным, если ещё нет
-    escapeContainer.style.position = 'relative';
+    // Делаем позиционирование абсолютным в пределах всего слайда
+    container.style.position = 'absolute';
     btn.style.position = 'absolute';
     
-    // Генерируем СЛУЧАЙНЫЕ координаты в пределах всего контейнера слайда
-    // Кнопка может улететь в любую сторону!
-    const containerWidth = escapeContainer.offsetWidth;
-    const containerHeight = escapeContainer.offsetHeight;
-    const btnWidth = btn.offsetWidth;
-    const btnHeight = btn.offsetHeight;
+    // Получаем размеры слайда и кнопки
+    const slideRect = slide.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
     
-    // Большой радиус разброса — от -150 до 150 пикселей по горизонтали
-    // и от -100 до 100 по вертикали
-    let randomX = Math.floor(Math.random() * 300) - 150;
-    let randomY = Math.floor(Math.random() * 200) - 100;
+    // Генерируем случайные координаты в пределах слайда
+    // но так, чтобы кнопка не уходила за границы
+    const maxX = slideRect.width - btnRect.width - 20;
+    const maxY = slideRect.height - btnRect.height - 20;
     
-    // Не даём кнопке улететь слишком далеко за пределы видимой области
-    // (но оставляем возможность убегать прилично)
-    if (randomX > 150) randomX = 150;
-    if (randomX < -150) randomX = -150;
-    if (randomY > 100) randomY = 100;
-    if (randomY < -100) randomY = -100;
+    // От 20px до max-20px, чтобы не прилипала к краям
+    let randomX = Math.floor(Math.random() * maxX) + 10;
+    let randomY = Math.floor(Math.random() * maxY) + 10;
     
-    // Применяем смещение
     btn.style.left = randomX + 'px';
     btn.style.top = randomY + 'px';
+    btn.style.width = 'auto';  // возвращаем обычную ширину
     
-    // Меняем текст на случайную шаловливую фразу
+    // Меняем текст
     const randomPhrase = naughtyPhrases[Math.floor(Math.random() * naughtyPhrases.length)];
     btn.textContent = randomPhrase;
     
-    // Добавляем небольшую анимацию "взбрыка"
+    // Анимация
     btn.style.transform = 'scale(0.95)';
     setTimeout(() => {
         btn.style.transform = 'scale(1)';
     }, 150);
 }
 
-// Убегаем ТОЛЬКО при клике
+// Первый клик — кнопка улетает и больше не перекрывает розовую
 escapeBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    e.stopPropagation(); // Не даём событию уйти дальше
+    e.stopPropagation();
+    
+    if (firstClick) {
+        // При первом клике убираем позиционирование "поверх"
+        escapeContainer.style.position = 'relative';
+        escapeContainer.style.width = 'auto';
+        escapeBtn.style.position = 'relative';
+        escapeBtn.style.width = 'auto';
+        escapeBtn.style.left = '0';
+        escapeBtn.style.top = '0';
+        firstClick = false;
+    }
+    
     moveEscapeButton();
 });
 
-// Для мобильных устройств тоже работает
+// Для мобильных
 escapeBtn.addEventListener('touchstart', function(e) {
     e.preventDefault();
+    if (firstClick) {
+        escapeContainer.style.position = 'relative';
+        escapeContainer.style.width = 'auto';
+        escapeBtn.style.position = 'relative';
+        escapeBtn.style.width = 'auto';
+        escapeBtn.style.left = '0';
+        escapeBtn.style.top = '0';
+        firstClick = false;
+    }
     moveEscapeButton();
 });
 
-// ВАЖНО: убираем побег при наведении (если был добавлен ранее)
-escapeBtn.onmouseover = null;
-
-
-
-
-
-        // ========== ДЛЯ ТЕКСТА ПИСЬМА ==========
-        // Функция, чтобы обновить текст письма (вызови в консоли или добавь вызов)
-        function setLetterText(text) {
-            document.getElementById('letterText').innerHTML = text.replace(/\n/g, '<br>');
-        }
-
-        // Пример, как ты сможешь вставить письмо:
-        // setLetterText('Привет, зайка...\nЯ тебя очень люблю!');
-        
-        // Сейчас тут заглушка. Текст изменишь одной строкой.
     </script>
     <style>
 /* Контейнер для сердечек */
@@ -442,4 +435,5 @@ setInterval(createHeart, 300);
 </script>
 </body>
 </html>
+
 
