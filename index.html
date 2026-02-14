@@ -70,7 +70,7 @@
             /* это ВЕРХНИЙ ТРЕУГОЛЬНИК (клапан) */
             content: '';
             position: absolute;
-            top: -40px;        /* поднимаем треугольник НАД прямоугольником */
+            top: -60px;        /* поднимаем треугольник НАД прямоугольником */
             left: 0;
             width: 0;
             height: 0;
@@ -82,11 +82,15 @@
         .envelope:after {
             content: '✉️';
             position: absolute;
-            top: 30px;
-            left: 80px;
-            font-size: 150px;
-            opacity: 0.2;
-        }
+            top: 50%;              /* центрирование по вертикали */
+            left: 50%;             /* центрирование по горизонтали */
+            transform: translate(-50%, -50%);  /* точный центр */
+            font-size: 120px;      /* чуть уменьшила, чтобы влезал */
+            opacity: 0.15;         /* совсем нежный, как фактура */
+            pointer-events: none;  /* чтобы не мешал нажимать */
+            z-index: 1;            /* лежит поверх конверта */
+}
+        
 
         /* Кнопки */
         .btn {
@@ -435,6 +439,7 @@ setInterval(createHeart, 300);
 </script>
 </body>
 </html>
+
 
 
 
